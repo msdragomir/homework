@@ -1,3 +1,8 @@
+from ipaddress import IPv4Network
+
+from data_structures.entry import Entry
+
+
 class NetworkCollection:
     def __init__(self, ipv4_network, raw_entry_list):
         """
@@ -7,7 +12,21 @@ class NetworkCollection:
         self.entries -> list(Entry)
         """
 
-        pass
+        try:
+            self.ipv4_network = IPv4Network(ipv4_network)
+        except:
+            print(f"Invalid 'ipv4_network' filed for NetworkCollection - {ipv4_network} ")
+            # ToDo: what do i do ?
+
+        if isinstance(raw_entry_list, list):
+            self.entries = [
+                Entry(entry.get("address"), entry.get("available"), entry.get("last_used"))
+                for entry in raw_entry_list if isinstance(entry, dict)
+            ]
+        else:
+            print(f"Invalid 'raw_entry_list' argument for NetworkCollection.  "
+                  f"Expected 'list', got {type(raw_entry_list)}")
+            # ToDo: what do i do ?
 
     def remove_invalid_records(self):
         """
