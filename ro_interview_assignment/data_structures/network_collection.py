@@ -1,4 +1,4 @@
-from ipaddress import IPv4Network
+import ipaddress
 
 from data_structures.entry import Entry
 
@@ -13,7 +13,7 @@ class NetworkCollection:
         """
 
         try:
-            self.ipv4_network = IPv4Network(ipv4_network)
+            self.ipv4_network = ipaddress.IPv4Network(ipv4_network)
         except:
             print(f"Invalid 'ipv4_network' filed for NetworkCollection - {ipv4_network} ")
             # ToDo: what do i do ?
@@ -33,7 +33,25 @@ class NetworkCollection:
         Removes invalid objects from the entries list.
         """
 
-        pass
+        valid_network_entries = []
+
+        for network_entry in self.entries:
+            ipv4_address = network_entry.address
+
+            # Remove invalid IPv4 addresses
+            try:
+                ipv4_addr_obj = ipaddress.IPv4Address(ipv4_address)
+            except:
+                print(f"Removing invalid IPv4 address {ipv4_address}")
+                continue
+
+            # Remove IPv4 addresses that do not belong to the parent IPv4 network
+            if ipv4_addr_obj in self.ipv4_network.hosts():
+                valid_network_entries.append(network_entry)
+            else:
+                print(f"Removing IPv4 address {ipv4_address} as it does not belong to {self.ipv4_network}")
+
+        self.entries = valid_network_entries
 
     def sort_records(self):
         """

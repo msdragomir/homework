@@ -1,4 +1,5 @@
 import datetime
+from ipaddress import IPv4Address
 
 DATETIME_FORMAT = '%d/%m/%y %H:%M:%S'
 
@@ -32,3 +33,10 @@ class Entry:
         except:
             print(f"Invalid Entry 'last_used' field.  Expected datetime format {DATETIME_FORMAT}")
             # ToDo: what do i do ?
+
+    def __lt__(self, other):
+        """
+        Compare two IPv4 addresses
+        """
+        assert isinstance(other, Entry)
+        return IPv4Address(self.address) < IPv4Address(other.address)

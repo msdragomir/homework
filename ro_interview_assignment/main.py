@@ -55,12 +55,27 @@ def main():
     if not data:
         raise ValueError('No data to process')
 
+    print("Organizing the fetched data into structures ...")
     datacenters = [
         Datacenter(key, value)
         for key, value in data.items()
     ]
 
-    pass  # the rest of your logic here
+    print("Removing invalid clusters ...")
+    for datacenter in datacenters:
+        datacenter.remove_invalid_clusters()
+
+    print("Removing invalid network records ...")
+    for datacenter in datacenters:
+        for cluster in datacenter.clusters:
+            for network in cluster.networks:
+                network.remove_invalid_records()
+
+    print("Sorting network records ...")
+    for datacenter in datacenters:
+        for cluster in datacenter.clusters:
+            for network in cluster.networks:
+                network.sort_records()
 
 
 if __name__ == '__main__':

@@ -1,4 +1,8 @@
+import re
+
 from data_structures.cluster import Cluster
+
+CLUSTER_NAME_PATTERN = r"^%s-\d{1,3}$"
 
 
 class Datacenter:
@@ -31,4 +35,16 @@ class Datacenter:
         Removes invalid objects from the clusters list.
         """
 
-        pass
+        expected_cluster_name = self.name[:3].upper()
+        cluster_name_regex = re.compile(CLUSTER_NAME_PATTERN % expected_cluster_name)
+        valid_clusters = []
+
+        for cluster in self.clusters:
+            cluster_name = cluster.name
+            cluster_name_match = cluster_name_regex.match(cluster_name)
+            if cluster_name_match is None:
+                print(f"Removing invalid cluster {cluster_name} from datacenter {self.name}")
+            else:
+                valid_clusters.append(cluster)
+
+        self.clusters = valid_clusters
