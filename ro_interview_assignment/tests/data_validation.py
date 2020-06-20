@@ -383,11 +383,11 @@ def test_invalid_datacenter_clusters_type():
         "Test case test_invalid_datacenter_clusters_type PASSED")
 
 
-def test_records_order():
+def test_records_order_1():
     """
     Validate that network entries are correctly ordered
     """
-    logger.info("Starting test case test_records_order")
+    logger.info("Starting test case test_records_order_1")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"][
         "192.168.200.0/24"].append(
@@ -444,7 +444,55 @@ def test_records_order():
                1].last_used == "30/01/20 17:00:00", \
         f"Expected network entry last_used field 30/01/20 17:00:00, " \
         f"got {datacenter.clusters[0].networks[0].entries[1].last_used}"
-    logger.info("Test case test_records_order PASSED")
+    logger.info("Test case test_records_order_1 PASSED")
+
+
+def test_records_order_2():
+    """
+    Validate that network entries are correctly ordered
+    """
+    logger.info("Starting test case test_records_order_2")
+    datacenter_dict = deepcopy(DATA)
+    datacenter_dict["Berlin"]["BER-1"]["networks"][
+        "192.168.200.0/24"].append(
+        {
+            "address": "192.168.200.8",
+            "available": False,
+            "last_used": "30/01/20 16:00:00"
+        }
+    )
+    datacenter = Datacenter("Berlin", datacenter_dict["Berlin"])
+    assert datacenter.name == "Berlin", \
+        f"Expected datacenter name to be Berlin, got {datacenter.name}"
+    assert len(datacenter.clusters) == 1, \
+        f"Expected only one cluster, got {len(datacenter.clusters)} " \
+        f"clusters"
+    assert datacenter.clusters[0].name == "BER-1", \
+        f"Expected cluster name BER-1, got " \
+        f"{datacenter.clusters[0].name}"
+    assert datacenter.clusters[0].security_level == 3, \
+        f"Expcetd cluster security level 3, got " \
+        f"{datacenter.clusters[0].security_level}"
+    assert len(datacenter.clusters[0].networks) == 1, \
+        f"Expected only one cluster network, got " \
+        f"{len(datacenter.clusters[0].networks)}"
+    assert datacenter.clusters[0].networks[
+               0].ipv4_network == IPv4Network("192.168.200.0/24"), \
+        f"Expected cluster IPV4 network to be " \
+        f"IPv4Network('192.168.200.0/24'), got " \
+        f"{datacenter.clusters[0].networks[0].ipv4_network}"
+    assert len(datacenter.clusters[0].networks[0].entries) == 2, \
+        f"Expected two network entries, got " \
+        f"{len(datacenter.clusters[0].networks[0].entries)}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].address == "192.168.200.8", \
+        f"Expected network entry address '192.168.200.8', got " \
+        f"{datacenter.clusters[0].networks[0].entries[0].address}"
+    assert datacenter.clusters[0].networks[0].entries[
+               1].address == "192.168.200.8", \
+        f"Expected network entry address '192.168.200.8', got " \
+        f"{datacenter.clusters[0].networks[0].entries[1].address}"
+    logger.info("Test case test_records_order_2 PASSED")
 
 
 def common_check_invalid_entry(datacenter_dict=None,
@@ -500,4 +548,5 @@ if __name__ == '__main__':
     test_invalid_cluster_security_level()
     test_invalid_cluster_networks_type()
     test_invalid_datacenter_clusters_type()
-    test_records_order()
+    test_records_order_1()
+    test_records_order_2()
