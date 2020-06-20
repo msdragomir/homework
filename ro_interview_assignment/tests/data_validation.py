@@ -23,10 +23,12 @@ DATA = {
 
 def test_invalid_entry_address_field():
     """
-    Validate that invalid values for the 'address' attribute of an Entry object are ignored
+    Validate that invalid values for the 'address' attribute of an Entry
+    object are ignored
     """
     datacenter_dict = deepcopy(DATA)
-    datacenter_dict["Berlin"]["BER-1"]["networks"]["192.168.200.0/24"].extend(
+    datacenter_dict["Berlin"]["BER-1"]["networks"][
+        "192.168.200.0/24"].extend(
         [
             {
                 "address": 1,
@@ -75,10 +77,12 @@ def test_invalid_entry_address_field():
 
 def test_invalid_entry_available_field():
     """
-    Validate that invalid values for the 'available' attribute of an Entry object are ignored
+    Validate that invalid values for the 'available' attribute of an
+    Entry object are ignored
     """
     datacenter_dict = deepcopy(DATA)
-    datacenter_dict["Berlin"]["BER-1"]["networks"]["192.168.200.0/24"].append(
+    datacenter_dict["Berlin"]["BER-1"]["networks"][
+        "192.168.200.0/24"].append(
         {
             "address": "192.168.200.9",
             "available": 1,
@@ -90,10 +94,12 @@ def test_invalid_entry_available_field():
 
 def test_invalid_entry_last_used_field():
     """
-    Validate that invalid values for the 'last_used' attribute of an Entry object are ignored
+    Validate that invalid values for the 'last_used' attribute of an
+    Entry object are ignored
     """
     datacenter_dict = deepcopy(DATA)
-    datacenter_dict["Berlin"]["BER-1"]["networks"]["192.168.200.0/24"].append(
+    datacenter_dict["Berlin"]["BER-1"]["networks"][
+        "192.168.200.0/24"].append(
         {
             "address": "192.168.200.9",
             "available": True,
@@ -105,7 +111,8 @@ def test_invalid_entry_last_used_field():
 
 def test_invalid_network_ipv4_network():
     """
-    Validate that invalid values for the 'ipv4_network' attribute of a NetworkCollection object are ignored
+    Validate that invalid values for the 'ipv4_network' attribute of a
+    NetworkCollection object are ignored
     """
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"].update(
@@ -131,7 +138,8 @@ def test_invalid_network_ipv4_network():
 
 def test_invalid_network_entries_type():
     """
-    Validate that invalid values for the 'entries' attribute of a NetworkCollection object are ignored
+    Validate that invalid values for the 'entries' attribute of a
+    NetworkCollection object are ignored
     """
     datacenter_dict = {
         "Berlin": {
@@ -159,7 +167,8 @@ def test_invalid_network_entries_type():
 
 def test_invalid_cluster_name():
     """
-    Validate that invalid values for the 'entries' attribute of a NetworkCollection object are ignored
+    Validate that invalid values for the 'entries' attribute of a
+    NetworkCollection object are ignored
     """
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
@@ -243,7 +252,8 @@ def test_invalid_cluster_name():
 
 def test_invalid_cluster_security_level():
     """
-    Validate that invalid values for the 'security_level' attribute of a Cluster object are ignored
+    Validate that invalid values for the 'security_level' attribute of a
+    Cluster object are ignored
     """
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
@@ -267,7 +277,8 @@ def test_invalid_cluster_security_level():
 
 def test_invalid_cluster_networks_type():
     """
-    Validate that invalid values for the 'networks' attribute of a Cluster object are ignored
+    Validate that invalid values for the 'networks' attribute of a
+    Cluster object are ignored
     """
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
@@ -301,7 +312,8 @@ def test_invalid_cluster_networks_type():
 
 def test_invalid_datacenter_clusters_type():
     """
-    Validate that invalid values for the 'clusters' attribute of a Cluster object are ignored
+    Validate that invalid values for the 'clusters' attribute of a
+    Cluster object are ignored
     """
     datacenter_dict = {
         "Berlin": {
@@ -336,10 +348,12 @@ def test_invalid_datacenter_clusters_type():
     datacenters = []
     for datacenter_name, datacenter_dict in datacenter_dict.items():
         try:
-            datacenters.append(Datacenter(datacenter_name, datacenter_dict))
+            datacenters.append(
+                Datacenter(datacenter_name, datacenter_dict))
         except Exception as e:
             print(str(e))
-    assert len(datacenters) == 1, f"Expcted only one datacenter, got {len(datacenters)}"
+    assert len(datacenters) == 1, \
+        f"Expcted only one datacenter, got {len(datacenters)}"
     datacenter_obj = datacenters[0]
     common_check_invalid_entry(datacenter_obj=datacenter_obj)
 
@@ -349,7 +363,8 @@ def test_records_order():
     Validate that network entries are correctly ordered
     """
     datacenter_dict = deepcopy(DATA)
-    datacenter_dict["Berlin"]["BER-1"]["networks"]["192.168.200.0/24"].append(
+    datacenter_dict["Berlin"]["BER-1"]["networks"][
+        "192.168.200.0/24"].append(
         {
             "address": "192.168.200.1",
             "available": False,
@@ -357,58 +372,95 @@ def test_records_order():
         }
     )
     datacenter = Datacenter("Berlin", datacenter_dict["Berlin"])
-    assert datacenter.name == "Berlin", f"Expected datacenter name to be Berlin, got {datacenter.name}"
-    assert len(datacenter.clusters) == 1, f"Expected only one cluster, got {len(datacenter.clusters)} clusters"
-    assert datacenter.clusters[0].name == "BER-1", f"Expected cluster name BER-1, got {datacenter.clusters[0].name}"
+    assert datacenter.name == "Berlin",\
+        f"Expected datacenter name to be Berlin, got {datacenter.name}"
+    assert len(datacenter.clusters) == 1, \
+        f"Expected only one cluster, got {len(datacenter.clusters)} " \
+        f"clusters"
+    assert datacenter.clusters[0].name == "BER-1", \
+        f"Expected cluster name BER-1, got " \
+        f"{datacenter.clusters[0].name}"
     assert datacenter.clusters[0].security_level == 3, \
-        f"Expcetd cluster security level 3, got {datacenter.clusters[0].security_level}"
+        f"Expcetd cluster security level 3, got " \
+        f"{datacenter.clusters[0].security_level}"
     assert len(datacenter.clusters[0].networks) == 1, \
-        f"Expected only one cluster network, got {len(datacenter.clusters[0].networks)}"
-    assert datacenter.clusters[0].networks[0].ipv4_network == IPv4Network("192.168.200.0/24"), \
-        f"Expected cluster IPV4 network to be IPv4Network('192.168.200.0/24'), got " \
+        f"Expected only one cluster network, got " \
+        f"{len(datacenter.clusters[0].networks)}"
+    assert datacenter.clusters[0].networks[
+               0].ipv4_network == IPv4Network("192.168.200.0/24"), \
+        f"Expected cluster IPV4 network to be " \
+        f"IPv4Network('192.168.200.0/24'), got " \
         f"{datacenter.clusters[0].networks[0].ipv4_network}"
     assert len(datacenter.clusters[0].networks[0].entries) == 2, \
-        f"Expected two network entries, got {len(datacenter.clusters[0].networks[0].entries)}"
-    assert datacenter.clusters[0].networks[0].entries[0].address == "192.168.200.1", \
-        f"Expected network entry address '192.168.200.1', got {datacenter.clusters[0].networks[0].entries[0].address}"
-    assert datacenter.clusters[0].networks[0].entries[0].available is False, \
-        f"Expected network entry available field False, got {datacenter.clusters[0].networks[0].entries[0].available}"
-    assert datacenter.clusters[0].networks[0].entries[0].last_used == "30/01/20 16:00:00", \
-        f"Expected network entry last_used field 30/01/20 17:00:00, got " \
-        f"{datacenter.clusters[0].networks[0].entries[0].last_used}"
-    assert datacenter.clusters[0].networks[0].entries[1].address == "192.168.200.8", \
-        f"Expected network entry address '192.168.200.8', got {datacenter.clusters[0].networks[0].entries[1].address}"
-    assert datacenter.clusters[0].networks[0].entries[1].available is True, \
-        f"Expected network entry available field True, got {datacenter.clusters[0].networks[0].entries[1].available}"
-    assert datacenter.clusters[0].networks[0].entries[1].last_used == "30/01/20 17:00:00", \
-        f"Expected network entry last_used field 30/01/20 17:00:00, got " \
-        f"{datacenter.clusters[0].networks[0].entries[1].last_used}"
+        f"Expected two network entries, got " \
+        f"{len(datacenter.clusters[0].networks[0].entries)}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].address == "192.168.200.1", \
+        f"Expected network entry address '192.168.200.1', got " \
+        f"{datacenter.clusters[0].networks[0].entries[0].address}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].available is False, \
+        f"Expected network entry available field False, got " \
+        f"{datacenter.clusters[0].networks[0].entries[0].available}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].last_used == "30/01/20 16:00:00", \
+        f"Expected network entry last_used field 30/01/20 17:00:00, " \
+        f"got {datacenter.clusters[0].networks[0].entries[0].last_used}"
+    assert datacenter.clusters[0].networks[0].entries[
+               1].address == "192.168.200.8", \
+        f"Expected network entry address '192.168.200.8', got " \
+        f"{datacenter.clusters[0].networks[0].entries[1].address}"
+    assert datacenter.clusters[0].networks[0].entries[
+               1].available is True, \
+        f"Expected network entry available field True, got " \
+        f"{datacenter.clusters[0].networks[0].entries[1].available}"
+    assert datacenter.clusters[0].networks[0].entries[
+               1].last_used == "30/01/20 17:00:00", \
+        f"Expected network entry last_used field 30/01/20 17:00:00, " \
+        f"got {datacenter.clusters[0].networks[0].entries[1].last_used}"
 
 
-def common_check_invalid_entry(datacenter_dict=None, datacenter_obj=None):
+def common_check_invalid_entry(datacenter_dict=None,
+                               datacenter_obj=None):
     """
     Common function used for checking the datacenter object attributes.
     """
-    datacenter = Datacenter("Berlin", datacenter_dict["Berlin"]) if datacenter_dict is not None else datacenter_obj
-    assert datacenter.name == "Berlin", f"Expected datacenter name to be Berlin, got {datacenter.name}"
-    assert len(datacenter.clusters) == 1, f"Expected only one cluster, got {len(datacenter.clusters)} clusters"
-    assert datacenter.clusters[0].name == "BER-1", f"Expected cluster name BER-1, got {datacenter.clusters[0].name}"
+    datacenter = Datacenter("Berlin", datacenter_dict[
+        "Berlin"]) if datacenter_dict is not None else datacenter_obj
+    assert datacenter.name == "Berlin", \
+        f"Expected datacenter name to be Berlin, got {datacenter.name}"
+    assert len(datacenter.clusters) == 1, \
+        f"Expected only one cluster, got {len(datacenter.clusters)} " \
+        f"clusters"
+    assert datacenter.clusters[0].name == "BER-1", \
+        f"Expected cluster name BER-1, got " \
+        f"{datacenter.clusters[0].name}"
     assert datacenter.clusters[0].security_level == 3, \
-        f"Expcetd cluster security level 3, got {datacenter.clusters[0].security_level}"
+        f"Expcetd cluster security level 3, got " \
+        f"{datacenter.clusters[0].security_level}"
     assert len(datacenter.clusters[0].networks) == 1, \
-        f"Expected only one cluster network, got {len(datacenter.clusters[0].networks)}"
-    assert datacenter.clusters[0].networks[0].ipv4_network == IPv4Network("192.168.200.0/24"), \
-        f"Expected cluster IPV4 network to be IPv4Network('192.168.200.0/24'), got " \
+        f"Expected only one cluster network, got " \
+        f"{len(datacenter.clusters[0].networks)}"
+    assert datacenter.clusters[0].networks[
+               0].ipv4_network == IPv4Network("192.168.200.0/24"), \
+        f"Expected cluster IPV4 network to be " \
+        f"IPv4Network('192.168.200.0/24'), got " \
         f"{datacenter.clusters[0].networks[0].ipv4_network}"
     assert len(datacenter.clusters[0].networks[0].entries) == 1, \
-        f"Expected only one network entry, got {len(datacenter.clusters[0].networks[0].entries)}"
-    assert datacenter.clusters[0].networks[0].entries[0].address == "192.168.200.8", \
-        f"Expected network entry address '192.168.200.8', got {datacenter.clusters[0].networks[0].entries[0].address}"
-    assert datacenter.clusters[0].networks[0].entries[0].available is True, \
-        f"Expected network entry available field True, got {datacenter.clusters[0].networks[0].entries[0].available}"
-    assert datacenter.clusters[0].networks[0].entries[0].last_used == "30/01/20 17:00:00", \
-        f"Expected network entry last_used field 30/01/20 17:00:00, got " \
-        f"{datacenter.clusters[0].networks[0].entries[0].last_used}"
+        f"Expected only one network entry, got " \
+        f"{len(datacenter.clusters[0].networks[0].entries)}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].address == "192.168.200.8", \
+        f"Expected network entry address '192.168.200.8', got " \
+        f"{datacenter.clusters[0].networks[0].entries[0].address}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].available is True, \
+        f"Expected network entry available field True, got " \
+        f"{datacenter.clusters[0].networks[0].entries[0].available}"
+    assert datacenter.clusters[0].networks[0].entries[
+               0].last_used == "30/01/20 17:00:00", \
+        f"Expected network entry last_used field 30/01/20 17:00:00, " \
+        f"got {datacenter.clusters[0].networks[0].entries[0].last_used}"
 
 
 if __name__ == '__main__':

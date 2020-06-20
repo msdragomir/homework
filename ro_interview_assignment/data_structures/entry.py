@@ -17,26 +17,29 @@ class Entry:
         if isinstance(address, str):
             self.address = address
         else:
-            print(f"Invalid Entry 'address' field - {address}.  Expected 'str', got {type(address)}")
-            # ToDo: what do i do ?
+            raise TypeError(
+                f"Invalid Entry 'address' field - {address}.  "
+                f"Expected 'str', got {type(address)}")
 
         if isinstance(available, bool):
             self.available = available
         else:
-            print(f"Invalid Entry 'available' field - {available}.  Expected 'bool', got {type(available)}")
-            # ToDo: what do i do ?
+            raise TypeError(
+                f"Invalid Entry 'available' field - {available}.  "
+                f"Expected 'bool', got {type(available)}")
 
         try:
-            # ToDo: does it really have to be of datetime type ?
-            last_used_datetime = datetime.datetime.strptime(last_used, DATETIME_FORMAT)
-            self.last_used = last_used_datetime
-        except:
-            print(f"Invalid Entry 'last_used' field.  Expected datetime format {DATETIME_FORMAT}")
-            # ToDo: what do i do ?
+            datetime.datetime.strptime(last_used, DATETIME_FORMAT)
+            self.last_used = last_used
+        except Exception:
+            raise TypeError(
+                f"Invalid Entry 'last_used' field {last_used}.  "
+                f"Expected datetime format {DATETIME_FORMAT}")
 
     def __lt__(self, other):
         """
-        Compare two IPv4 addresses
+        Decide whether one IPv4 address is "less than" the other by
+        comparing the decimal value of the IPv4 address
         """
         assert isinstance(other, Entry)
         return IPv4Address(self.address) < IPv4Address(other.address)
