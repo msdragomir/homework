@@ -1,7 +1,10 @@
 from copy import deepcopy
 from ipaddress import IPv4Network
 
+import loggin_module
 from data_structures.datacenter import Datacenter
+
+logger = loggin_module.get_logger(__name__, level="INFO")
 
 DATA = {
     "Berlin": {
@@ -26,6 +29,7 @@ def test_invalid_entry_address_field():
     Validate that invalid values for the 'address' attribute of an Entry
     object are ignored
     """
+    logger.info(f"Starting test case test_invalid_entry_address_field")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"][
         "192.168.200.0/24"].extend(
@@ -73,6 +77,7 @@ def test_invalid_entry_address_field():
         ]
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info(f"Test case test_invalid_entry_address_field PASSED")
 
 
 def test_invalid_entry_available_field():
@@ -80,6 +85,7 @@ def test_invalid_entry_available_field():
     Validate that invalid values for the 'available' attribute of an
     Entry object are ignored
     """
+    logger.info("Starting test case test_invalid_entry_available_field")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"][
         "192.168.200.0/24"].append(
@@ -90,6 +96,7 @@ def test_invalid_entry_available_field():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_entry_available_field PASSED")
 
 
 def test_invalid_entry_last_used_field():
@@ -97,6 +104,8 @@ def test_invalid_entry_last_used_field():
     Validate that invalid values for the 'last_used' attribute of an
     Entry object are ignored
     """
+    logger.info(
+        "Starting tesst case test_invalid_entry_last_used_field")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"][
         "192.168.200.0/24"].append(
@@ -107,6 +116,7 @@ def test_invalid_entry_last_used_field():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_entry_last_used_field PASSED")
 
 
 def test_invalid_network_ipv4_network():
@@ -114,6 +124,7 @@ def test_invalid_network_ipv4_network():
     Validate that invalid values for the 'ipv4_network' attribute of a
     NetworkCollection object are ignored
     """
+    logger.info("Starting test case test_invalid_network_ipv4_network")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"].update(
         {
@@ -134,6 +145,7 @@ def test_invalid_network_ipv4_network():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_network_ipv4_network PASSED")
 
 
 def test_invalid_network_entries_type():
@@ -141,6 +153,7 @@ def test_invalid_network_entries_type():
     Validate that invalid values for the 'entries' attribute of a
     NetworkCollection object are ignored
     """
+    logger.info("Starting test case test_invalid_network_entries_type")
     datacenter_dict = {
         "Berlin": {
             "BER-1": {
@@ -163,6 +176,7 @@ def test_invalid_network_entries_type():
         }
     }
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_network_entries_type PASSED")
 
 
 def test_invalid_cluster_name():
@@ -170,6 +184,7 @@ def test_invalid_cluster_name():
     Validate that invalid values for the 'entries' attribute of a
     NetworkCollection object are ignored
     """
+    logger.info("Starting test case test_invalid_cluster_name")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
         {
@@ -248,6 +263,7 @@ def test_invalid_cluster_name():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_cluster_name PASSED")
 
 
 def test_invalid_cluster_security_level():
@@ -255,6 +271,8 @@ def test_invalid_cluster_security_level():
     Validate that invalid values for the 'security_level' attribute of a
     Cluster object are ignored
     """
+    logger.info(
+        "Starting test case test_invalid_cluster_security_level")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
         {
@@ -273,6 +291,7 @@ def test_invalid_cluster_security_level():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_cluster_security_level PASSED")
 
 
 def test_invalid_cluster_networks_type():
@@ -280,6 +299,7 @@ def test_invalid_cluster_networks_type():
     Validate that invalid values for the 'networks' attribute of a
     Cluster object are ignored
     """
+    logger.info("Starting test case test_invalid_cluster_networks_type")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"].update(
         {
@@ -308,6 +328,7 @@ def test_invalid_cluster_networks_type():
         }
     )
     common_check_invalid_entry(datacenter_dict)
+    logger.info("Test case test_invalid_cluster_networks_type PASSED")
 
 
 def test_invalid_datacenter_clusters_type():
@@ -315,6 +336,8 @@ def test_invalid_datacenter_clusters_type():
     Validate that invalid values for the 'clusters' attribute of a
     Cluster object are ignored
     """
+    logger.info(
+        "Starting test case test_invalid_datacenter_clusters_type")
     datacenter_dict = {
         "Berlin": {
             "BER-1": {
@@ -351,17 +374,20 @@ def test_invalid_datacenter_clusters_type():
             datacenters.append(
                 Datacenter(datacenter_name, datacenter_dict))
         except Exception as e:
-            print(str(e))
+            logger.debug(str(e))
     assert len(datacenters) == 1, \
         f"Expcted only one datacenter, got {len(datacenters)}"
     datacenter_obj = datacenters[0]
     common_check_invalid_entry(datacenter_obj=datacenter_obj)
+    logger.info(
+        "Test case test_invalid_datacenter_clusters_type PASSED")
 
 
 def test_records_order():
     """
     Validate that network entries are correctly ordered
     """
+    logger.info("Starting test case test_records_order")
     datacenter_dict = deepcopy(DATA)
     datacenter_dict["Berlin"]["BER-1"]["networks"][
         "192.168.200.0/24"].append(
@@ -418,6 +444,7 @@ def test_records_order():
                1].last_used == "30/01/20 17:00:00", \
         f"Expected network entry last_used field 30/01/20 17:00:00, " \
         f"got {datacenter.clusters[0].networks[0].entries[1].last_used}"
+    logger.info("Test case test_records_order PASSED")
 
 
 def common_check_invalid_entry(datacenter_dict=None,

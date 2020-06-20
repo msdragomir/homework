@@ -1,6 +1,9 @@
 import re
 
+import loggin_module
 from data_structures.cluster import Cluster
+
+logger = loggin_module.get_logger(__name__, level="INFO")
 
 CLUSTER_NAME_PATTERN = r"^%s-\d{1,3}$"
 
@@ -32,13 +35,14 @@ class Datacenter:
                                 security_level=cluster_details.get(
                                     "security_level")))
                 except Exception as e:
-                    print(str(e))
+                    logger.error(str(e))
         else:
             raise TypeError(
                 f"Invalid 'cluster_dict' argument for Datacenter.  "
                 f"Expected 'dict', got {type(cluster_dict)}")
 
-        print("Removing invalid clusters ...")
+        logger.info(
+            f"Removing invalid clusters for datacenter {self.name} ...")
         self.remove_invalid_clusters()
 
     def remove_invalid_clusters(self):
@@ -55,7 +59,7 @@ class Datacenter:
             cluster_name = cluster.name
             cluster_name_match = cluster_name_regex.match(cluster_name)
             if cluster_name_match is None:
-                print(
+                logger.debug(
                     f"Removing invalid cluster {cluster_name} from "
                     f"datacenter {self.name}")
             else:

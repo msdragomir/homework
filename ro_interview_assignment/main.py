@@ -2,7 +2,10 @@ from time import sleep
 
 import requests
 
+import loggin_module
 from data_structures.datacenter import Datacenter
+
+logger = loggin_module.get_logger(__name__, level="INFO")
 
 URL = "http://www.mocky.io/v2/5e539b332e00007c002dacbe"
 
@@ -20,21 +23,21 @@ def get_data(url, max_retries=5, delay_between_retries=1):
         data (dict)
     """
 
-    print(f"Fetching data from URL {url} ...")
+    logger.info(f"Fetching data from URL {url} ...")
     for retry_attempt in range(1, max_retries+1):
         try:
             server_response = requests.get(url)
             server_response_json = server_response.json()
-            print(
+            logger.debug(
                 f"Data successfully fetched from attempt no. "
                 f"{retry_attempt}")
             return server_response_json
         except Exception as e:
-            print(
+            logger.warning(
                 f"Attempt no. {retry_attempt} to fetch the data failed."
                 f"  Error message: {e}")
             sleep(delay_between_retries)
-    print(f"Could not fetch data")
+    logger.error(f"Could not fetch data")
 
 
 def main():
@@ -47,14 +50,14 @@ def main():
     if not data:
         raise ValueError('No data to process')
 
-    print("Organizing the fetched data into structures ...")
+    logger.info("Organizing the fetched data into structures ...")
     datacenters = []
     for datacenter_name, datacenter_dict in data.items():
         try:
             datacenters.append(Datacenter(datacenter_name,
                                           datacenter_dict))
         except Exception as e:
-            print(str(e))
+            logger.error(str(e))
 
 
 if __name__ == '__main__':

@@ -1,4 +1,7 @@
+import loggin_module
 from data_structures.network_collection import NetworkCollection
+
+logger = loggin_module.get_logger(__name__, level="INFO")
 
 
 class Cluster:
@@ -26,7 +29,7 @@ class Cluster:
                         NetworkCollection(ipv4_network=ipv4_prefix,
                                           raw_entry_list=network_list))
                 except Exception as e:
-                    print(str(e))
+                    logger.error(str(e))
         else:
             raise TypeError(
                 f"Invalid 'network_dict' argument for Cluster.  "
