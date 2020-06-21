@@ -39,7 +39,7 @@ class Entry:
     def __lt__(self, other):
         """
         Decide whether one IPv4 address is "less than" the other by
-        comparing the decimal value of the IPv4 address
+        comparing the decimal values of each IPv4 addresses
         """
         assert isinstance(other, Entry)
         return IPv4Address(self.address) < IPv4Address(other.address)
